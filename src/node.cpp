@@ -287,21 +287,11 @@ int main(int argc, char * argv[]) {
     
     sl_lidar_response_device_info_t devinfo;
     op_result = drv->getDeviceInfo(devinfo);
-    bool scan_frequency_tunning_after_scan = false;
+    bool scan_frequency_tunning_after_scan = true;
 
-    if( (devinfo.model>>4) > LIDAR_S_SERIES_MINUM_MAJOR_ID){
-        scan_frequency_tunning_after_scan = true;
-    }
     //two service for start/stop lidar rotate
     ros::ServiceServer stop_motor_service = nh.advertiseService("stop_motor", stop_motor);
     ros::ServiceServer start_motor_service = nh.advertiseService("start_motor", start_motor);
-
-    if(!scan_frequency_tunning_after_scan){ //for RPLIDAR A serials
-        //start RPLIDAR A serials  rotate by pwm
-        ROS_INFO("set lidar scan frequency to %.1f Hz(%.1f Rpm) ",scan_frequency,scan_frequency*60);
-        drv->setMotorSpeed(scan_frequency*60); //rpm
-    }
-
 
     LidarScanMode current_scan_mode;
     if (scan_mode.empty()) {
@@ -351,7 +341,6 @@ int main(int argc, char * argv[]) {
     ros::Time end_scan_time;
     double scan_duration;
 
-    
     while (ros::ok()) {
         sl_lidar_response_measurement_node_hq_t nodes[8192];
         size_t   count = _countof(nodes);
