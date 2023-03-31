@@ -297,8 +297,9 @@ int main(int argc, char * argv[]) {
     ros::ServiceServer start_motor_service = nh.advertiseService("start_motor", start_motor);
 
     if(!scan_frequency_tunning_after_scan){ //for RPLIDAR A serials
-       //start RPLIDAR A serials  rotate by pwm
-        drv->setMotorSpeed(600);     
+        //start RPLIDAR A serials  rotate by pwm
+        ROS_INFO("set lidar scan frequency to %.1f Hz(%.1f Rpm) ",scan_frequency,scan_frequency*60);
+        drv->setMotorSpeed(scan_frequency*60); //rpm
     }
 
 
